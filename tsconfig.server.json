@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist/server",
     "rootDir": "./server",
-    "declaration": false
+    "declaration": false,
+    "declarationMap": false
   },
   "include": ["server/**/*"],
   "exclude": ["node_modules", "dist", "client", "prisma"]
