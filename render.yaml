@@ -1,6 +1,7 @@
 services:
   - type: web
     name: bpm-platform
+    region: oregon
     env: node
     plan: free
     buildCommand: |
@@ -26,6 +27,7 @@ services:
 
 databases:
   - name: bpm-postgres
+    region: oregon
     plan: free
     databaseName: bpm_platform
     user: bpm_user
