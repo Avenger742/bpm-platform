@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Google Fonts ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ─── CSS Variables (Light Theme) ──────────────────────────────────────────── */
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-active: #00d97a;
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Dark Theme ────────────────────────────────────────────────────────────── */
+.dark {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #1e293b;
+  --bg-card: #1e293b;
+  --border-color: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --sidebar-bg: #020617;
+  --sidebar-text: #64748b;
+  --sidebar-active: #00d97a;
+  --scrollbar-track: #1e293b;
+  --scrollbar-thumb: #334155;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ─── High Contrast Theme (WCAG 2.1 AA) ─────────────────────────────────────── */
+.high-contrast {
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #111111;
+  --bg-card: #0a0a0a;
+  --border-color: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #ffff00;
+  --text-muted: #d1d5db;
+  --sidebar-bg: #000000;
+  --sidebar-text: #ffffff;
+  --sidebar-active: #00ff88;
+  --scrollbar-track: #111111;
+  --scrollbar-thumb: #ffffff;
+  --shadow-color: rgba(255, 255, 255, 0.1);
+  color-scheme: dark;
+}
+
+.high-contrast * {
+  border-color: #ffffff !important;
+}
+
+.high-contrast a,
+.high-contrast button:not([disabled]) {
+  outline: 2px solid transparent;
+}
+
+.high-contrast a:focus,
+.high-contrast button:focus {
+  outline: 3px solid #ffff00 !important;
+  outline-offset: 2px;
+}
+
+/* ─── Base Reset ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ─── Custom Scrollbar ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ─── Component Utilities ────────────────────────────────────────────────────── */
+@layer components {
+  .card {
+    @apply rounded-xl border bg-[var(--bg-card)] border-[var(--border-color)] shadow-sm;
+    box-shadow: 0 1px 3px var(--shadow-color);
+  }
+
+  .card-hover {
+    @apply card transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-500 text-white hover:bg-brand-600 focus-visible:ring-brand-500 shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply btn bg-[var(--bg-tertiary)] text-[var(--text-primary)] border border-[var(--border-color)] hover:bg-[var(--border-color)] focus-visible:ring-surface-400;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger-500 text-white hover:bg-danger-600 focus-visible:ring-danger-500;
+  }
+
+  .btn-ghost {
+    @apply btn hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)];
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .input {
+    @apply w-full px-3 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all text-sm;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-[var(--text-secondary)] mb-1;
+  }
+
+  .section-title {
+    @apply text-lg font-semibold text-[var(--text-primary)];
+  }
+
+  .stat-number {
+    @apply text-3xl font-bold tabular-nums;
+  }
+
+  .status-normal  { @apply text-success-500 bg-success-500/10; }
+  .status-warning { @apply text-warning-500 bg-warning-500/10; }
+  .status-critical{ @apply text-danger-500 bg-danger-500/10; }
+  .status-offline { @apply text-surface-400 bg-surface-400/10; }
+
+  /* Severity badges */
+  .severity-low      { @apply badge bg-success-500/15 text-success-600 dark:text-success-400; }
+  .severity-medium   { @apply badge bg-warning-500/15 text-warning-600 dark:text-warning-400; }
+  .severity-high     { @apply badge bg-orange-500/15 text-orange-600 dark:text-orange-400; }
+  .severity-critical { @apply badge bg-danger-500/15 text-danger-600 dark:text-danger-400; }
+
+  /* Glassmorphism card */
+  .glass {
+    @apply backdrop-blur-sm bg-white/5 border border-white/10;
+  }
+
+  /* Animated dot indicator */
+  .live-dot::before {
+    content: '';
+    @apply inline-block w-2 h-2 rounded-full bg-brand-500 mr-2 animate-pulse;
+  }
+
+  /* Data table */
+  .data-table { @apply w-full text-sm; }
+  .data-table th { @apply text-left px-4 py-3 text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider border-b border-[var(--border-color)]; }
+  .data-table td { @apply px-4 py-3 border-b border-[var(--border-color)] text-[var(--text-primary)]; }
+  .data-table tr:last-child td { @apply border-b-0; }
+  .data-table tr:hover td { @apply bg-[var(--bg-tertiary)]; }
+
+  /* Sidebar nav item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer;
+    color: var(--sidebar-text);
+  }
+  .nav-item:hover {
+    @apply bg-white/5 text-white;
+  }
+  .nav-item.active {
+    @apply bg-brand-500/15 font-semibold;
+    color: var(--sidebar-active);
+  }
+}
+
+/* ─── Animations ─────────────────────────────────────────────────────────────── */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-right {
+  animation: slideRight 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+/* Power flow arrow animation */
+@keyframes flowRight { 0% { transform: translateX(-8px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateX(8px); opacity: 0; } }
+@keyframes flowLeft  { 0% { transform: translateX(8px);  opacity: 0; } 50% { opacity: 1; } 100% { transform: translateX(-8px); opacity: 0; } }
+@keyframes flowDown  { 0% { transform: translateY(-8px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(8px);  opacity: 0; } }
+@keyframes flowUp    { 0% { transform: translateY(8px);  opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-8px); opacity: 0; } }
+
+.flow-right { animation: flowRight 1.4s ease-in-out infinite; }
+.flow-left  { animation: flowLeft  1.4s ease-in-out infinite; }
+.flow-down  { animation: flowDown  1.4s ease-in-out infinite; }
+.flow-up    { animation: flowUp    1.4s ease-in-out infinite; }
+
+/* Ticker scroll */
+.ticker-wrap { overflow: hidden; white-space: nowrap; }
+.ticker-content { display: inline-block; animation: ticker 40s linear infinite; }
+@keyframes ticker { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
+
+/* Pulse ring effect */
+@keyframes pingRing {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+.ping-ring { animation: pingRing 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
+
+/* Number counter animation */
+@property --num { syntax: '<integer>'; initial-value: 0; inherits: false; }

@@ -1,0 +1,124 @@
+// This is your Prisma schema file
+// SQLite does not support native enums — string fields are used with validation in application layer
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  // role: ADMIN | OPERATOR | GENERAL_USER
+  role         String    @default("GENERAL_USER")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  createdTickets  MaintenanceTicket[] @relation("CreatedBy")
+  assignedTickets MaintenanceTicket[] @relation("AssignedTo")
+  auditLogs       AuditLog[]
+
+  @@map("users")
+}
+
+model UtilityTariff {
+  id              String   @id @default(cuid())
+  name            String
+  peakRate        Float    // $/kWh
+  offPeakRate     Float    // $/kWh
+  shoulderRate    Float    // $/kWh
+  demandChargeKw  Float    // $/kW/month
+  effectiveFrom   DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("utility_tariffs")
+}
+
+model TelemetryRecord {
+  id                    String   @id @default(cuid())
+  timestamp             DateTime @default(now())
+  solarKw               Float
+  bioenergyKw           Float
+  loadKw                Float
+  gridImportKw          Float
+  gridExportKw          Float
+  batterySoc            Float    // State of Charge 0-100%
+  batterySoh            Float    // State of Health 0-100%
+  batteryCycles         Int
+  batteryVoltageV       Float
+  batteryCurrentA       Float
+  batteryTempC          Float
+  pneumaticPressurePsi  Float
+  pneumaticTempC        Float
+  // systemHealthStatus: NORMAL | WARNING | CRITICAL | OFFLINE
+  systemHealthStatus    String   @default("NORMAL")
+  frequency             Float    @default(50.0) // Hz
+  powerFactor           Float    @default(0.95)
+
+  @@index([timestamp])
+  @@map("telemetry_records")
+}
+
+model MaintenanceTicket {
+  id                    String   @id @default(cuid())
+  ticketCode            String   @unique
+  title                 String
+  description           String
+  // severity: LOW | MEDIUM | HIGH | CRITICAL
+  severity              String   @default("MEDIUM")
+  // status: NEW | IN_PROGRESS | RESOLVED
+  status                String   @default("NEW")
+  subsystem             String
+  resolutionNotes       String?
+  telemetrySnapshotJson String?
+  createdById           String
+  assignedToId          String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  createdBy  User  @relation("CreatedBy", fields: [createdById], references: [id])
+  assignedTo User? @relation("AssignedTo", fields: [assignedToId], references: [id])
+
+  @@index([status])
+  @@index([severity])
+  @@map("maintenance_tickets")
+}
+
+model SystemThreshold {
+  id            String   @id @default(cuid())
+  parameterName String   @unique
+  warningMin    Float?
+  warningMax    Float?
+  criticalMin   Float?
+  criticalMax   Float?
+  unit          String
+  description   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("system_thresholds")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  details   String
+  ipAddress String?
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
