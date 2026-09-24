@@ -5,8 +5,8 @@ services:
     env: node
     plan: free
     buildCommand: |
-      npm install
-      cd client && npm install && cd ..
+      npm install --include=dev
+      cd client && npm install --include=dev && cd ..
       npm run build
       npx prisma generate
     startCommand: npx prisma db push && npm start
