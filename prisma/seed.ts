@@ -56,6 +56,12 @@ function generateDegradedSoh(dayIndex: number): number {
 async function main() {
   console.log('🌱 Starting BPM Platform database seed...\n');
 
+  const existingUsers = await prisma.user.count();
+  if (existingUsers > 0) {
+    console.log('Database is already seeded. Skipping seed process.');
+    return;
+  }
+
   // ── 1. Clear existing data (order matters for FK constraints) ──────────────
   await prisma.auditLog.deleteMany();
   await prisma.maintenanceTicket.deleteMany();

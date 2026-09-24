@@ -9,7 +9,7 @@ services:
       cd client && npm install --include=dev && cd ..
       npm run build
       npx prisma generate
-    startCommand: npx prisma db push && npm start
+    startCommand: npx prisma db push && npm run seed && npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
